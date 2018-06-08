@@ -50,6 +50,7 @@ module.exports = class extends Generator {
          prompts.applicationName(this),
          prompts.customFolder(this),
          prompts.target(this),
+         prompts.configUpdate(this),
          prompts.azureSubInput(this),
          prompts.azureSubList(this),
          prompts.azureSubId(this),
@@ -89,8 +90,11 @@ module.exports = class extends Generator {
 
    // 5. Where you write the generator specific files (routes, controllers, etc)
    writing() {
+
+      let appName = this.applicationName;
+
       var tokens = {
-         name: this.applicationName,
+         name: appName,
          name_lowercase: this.applicationName.toLowerCase(),
          containerRegistry: this.dockerRegistry,
       };
@@ -102,43 +106,43 @@ module.exports = class extends Generator {
       // Folder chart
       this.fs.copyTpl(
          this.templatePath('chart/values.yaml'),
-         this.destinationPath('chart/values.yaml'),
+         this.destinationPath(`chart/${appName}/values.yaml`),
          tokens
       );
       this.fs.copyTpl(
          this.templatePath('chart/Chart.yaml'),
-         this.destinationPath('chart/Chart.yaml'),
+         this.destinationPath(`chart/${appName}/Chart.yaml`),
          tokens
       );
       this.fs.copy(
          this.templatePath('chart/.helmignore'),
-         this.destinationPath('chart/.helmignore')
+         this.destinationPath(`chart/${appName}/.helmignore`)
       );
 
       // Folder chart/templates
       this.fs.copyTpl(
          this.templatePath('chart/templates/_helpers.tpl'),
-         this.destinationPath('chart/templates/_helpers.tpl'),
+         this.destinationPath(`chart/${appName}/templates/_helpers.tpl`),
          tokens
       );
       this.fs.copyTpl(
          this.templatePath('chart/templates/configmap.yaml'),
-         this.destinationPath('chart/templates/configmap.yaml'),
+         this.destinationPath(`chart/${appName}/templates/configmap.yaml`),
          tokens
       );
       this.fs.copyTpl(
          this.templatePath('chart/templates/deployment.yaml'),
-         this.destinationPath('chart/templates/deployment.yaml'),
+         this.destinationPath(`chart/${appName}/templates/deployment.yaml`),
          tokens
       );
       this.fs.copyTpl(
          this.templatePath('chart/templates/service.yaml'),
-         this.destinationPath('chart/templates/service.yaml'),
+         this.destinationPath(`chart/${appName}/templates/service.yaml`),
          tokens
       );
       this.fs.copyTpl(
          this.templatePath('chart/templates/NOTES.txt'),
-         this.destinationPath('chart/templates/NOTES.txt'),
+         this.destinationPath(`chart/${appName}/templates/NOTES.txt`),
          tokens
       );
    }
